@@ -45,10 +45,12 @@ export class SlideBaseComponent {
       this.renderer.addClass(imgElement, 'example-image'); // Clase para estilos
 
       this.renderer.appendChild(newElement, imgElement);
+      this.delete(newElement);
     } else if (type === 'text') {
       const text = this.renderer.createText(content);
 
       this.renderer.appendChild(newElement, text);
+      this.delete(newElement);
     }
 
     // Insertar el elemento en el contenedor
@@ -61,6 +63,23 @@ export class SlideBaseComponent {
     dragRef.withBoundaryElement(container);
 
     this.dragRefs.push(dragRef);
+  }
+
+  delete(newElement: any) {
+    // Crear x de eliminación de elemento
+    const XELEMENT = this.renderer.createElement('span');
+    const DELETE = this.renderer.createText('X');
+    this.renderer.appendChild(XELEMENT, DELETE);
+    this.renderer.appendChild(newElement, XELEMENT);
+
+    this.renderer.addClass(XELEMENT, 'delete-icon'); // Clase para estilos
+
+    // Agregar el evento click dinámico
+    this.renderer.listen(XELEMENT, 'click', (event) => {
+      //console.log('event', event);
+      const parentElement = event.target.parentNode; // Obtener el elemento padre (newElement)
+      parentElement.remove(); // Eliminar el elemento concreto
+    });
   }
 
   saveSlideArea() {
