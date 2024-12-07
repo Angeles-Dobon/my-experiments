@@ -1,11 +1,12 @@
 <div class="container">
   <button (click)="addElement()">new draggable box</button>
+  <button (click)="addImage()">new draggable image</button>
+  <br />
+  <input type="file" id="image" name="image" accept="image/png, image/jpeg" />
+  <button (click)="saveSlideArea()">save design</button>
   <div id="example-boundary" cdkDropList>
-    <div class="example-box" cdkDragBoundary="#example-boundary" cdkDrag>
+    <!-- <div class="example-box" cdkDragBoundary="#example-boundary" cdkDrag>
       Solo puedes arrastrarme dentro del marco de puntos
-    </div>
-    <div class="example-box" cdkDragBoundary="#example-boundary" cdkDrag>
-      Solo puedes arrastrarme dentro del marco de puntos
-    </div>
+    </div> -->
   </div>
 </div>
