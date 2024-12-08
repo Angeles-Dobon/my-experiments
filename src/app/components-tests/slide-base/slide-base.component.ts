@@ -1,5 +1,6 @@
 import { Component, ElementRef, Renderer2 } from '@angular/core';
 import { CdkDrag, DragDrop, DragRef } from '@angular/cdk/drag-drop';
+import { ElementModifierService } from '../../services/element-modifier-service';
 
 @Component({
   selector: 'app-slide-base',
@@ -14,7 +15,8 @@ export class SlideBaseComponent {
   constructor(
     private renderer: Renderer2,
     private el: ElementRef,
-    private dragDrop: DragDrop
+    private dragDrop: DragDrop,
+    private elementModifierService: ElementModifierService
   ) {}
 
   addElement(type: string, content: string) {
@@ -82,9 +84,60 @@ export class SlideBaseComponent {
     });
   }
 
-  saveSlideArea() {
+  editSlideArea() {
     // Seleccionar el contenedor
     const container = this.el.nativeElement.querySelector('#example-boundary');
-    console.log(container);
+
+    // Seleccionar todos los divs dentro del contenedor
+    const spans = container.querySelectorAll('span');
+
+    // Agregar el evento click dinámico
+    spans.forEach((span: HTMLElement) => {
+      this.renderer.listen(span, 'click', (event) => {
+        //console.log('event', event);
+        const parentElement = event.target.parentNode; // Obtener el elemento padre (newElement)
+        parentElement.remove(); // Eliminar el elemento concreto
+      });
+    });
+
+    // Seleccionar todos los divs dentro del contenedor
+    const divs = container.querySelectorAll('div');
+
+    // Iterar sobre los divs y aplicar las configuraciones
+    divs.forEach((div: HTMLElement) => {
+      // Agregar clase y atributos
+      this.renderer.setAttribute(div, 'cdkDragBoundary', '#example-boundary');
+      this.renderer.setAttribute(div, 'cdkDrag', '');
+      this.renderer.addClass(div, 'cdk-drag');
+      this.renderer.addClass(div, 'example-box');
+
+      // Crear referencia de drag para cada elemento
+      const dragRef = this.dragDrop.createDrag(div);
+
+      // Limitar el movimiento al contenedor
+      dragRef.withBoundaryElement(container);
+
+      // Guardar la referencia de drag
+      this.dragRefs.push(dragRef);
+    });
+  }
+
+  saveSlideArea() {
+    let array: HTMLElement[] = [];
+    // Seleccionar el contenedor
+    const container = this.el.nativeElement.querySelector('#example-boundary');
+    if (container) {
+      // Modificar los elementos del interior del div #example-boundary usando el servicio
+      Array.from(container.children).forEach((el) => {
+        if (el instanceof HTMLElement) {
+          array.push(this.elementModifierService.modifyElement(el));
+        }
+      });
+      array.forEach((el) => {
+        console.log(el.outerHTML);
+      });
+    } else {
+      console.warn('No se encontró el contenedor.');
+    }
   }
 }
