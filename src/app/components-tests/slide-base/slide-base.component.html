@@ -1,47 +1,64 @@
 <div class="container">
-  <button (click)="addElement('text', 'assets/images/vector-web-icon.jpg')">
-    new draggable box
-  </button>
+  <input
+    type="text"
+    id="text"
+    name="text"
+    [(ngModel)]="text"
+    placeholder="Escribe aquí..."
+  />
   <br />
-  <button (click)="addElement('image', 'assets/images/vector-web-icon.jpg')">
-    new draggable image
-  </button>
+  <button (click)="addElement('text')">new draggable text</button>
   <br />
-  <input type="file" id="image" name="image" accept="image/png, image/jpeg" />
+  <input
+    type="file"
+    id="image"
+    name="image"
+    accept="image/png, image/jpeg"
+    [(ngModel)]="image"
+  />
   <br />
-  <button (click)="saveSlideArea()">save design</button>
+  <button (click)="addElement('image')">new draggable image</button>
+  <br />
+  <button (click)="saveSlideArea()">save area</button>
   <br />
   <button (click)="editSlideArea()">edit area</button>
   <br />
+  <p>Texto: {{ text }}</p>
+  <p>Imagen: {{ image }}</p>
   <main id="example-boundary" cdkDropList>
+    <!-- divs texto o imágenes -->
     <div
-      _ngcontent-ng-c2319281113=""
+      _ngcontent-ng-c1031656287=""
       class="cdk-drag example-box"
-      style="transform: translate3d(269px, 34px, 0px)"
+      style="transform: translate3d(432px, -7px, 0px)"
     >
-      <img
-        _ngcontent-ng-c2319281113=""
-        src="assets/images/vector-web-icon.jpg"
-        alt="texto-aleternativo"
-        class="example-image"
-      /><span
-        _ngcontent-ng-c2319281113=""
-        _ngcontent-ng-c1419856055=""
-        _ngcontent-ng-c177753093=""
-        class="delete-icon"
+      fgjghjkghkghk<span _ngcontent-ng-c1031656287="" class="delete-icon"
         >X</span
       >
     </div>
     <div
-      _ngcontent-ng-c2319281113=""
+      _ngcontent-ng-c1031656287=""
       class="cdk-drag example-box"
-      style="transform: translate3d(296px, 24px, 0px)"
+      style="transform: translate3d(-177px, 28px, 0px)"
     >
-      assets/images/vector-web-icon.jpg<span
-        _ngcontent-ng-c2319281113=""
-        class="delete-icon"
-        >X</span
-      >
+      <img
+        _ngcontent-ng-c1031656287=""
+        src="assets/images/car-cartoon-icon.jpg"
+        alt="texto-aleternativo"
+        class="example-image"
+      /><span _ngcontent-ng-c1031656287="" class="delete-icon">X</span>
+    </div>
+    <div
+      _ngcontent-ng-c1031656287=""
+      class="cdk-drag example-box"
+      style="transform: translate3d(-269px, 140px, 0px)"
+    >
+      <img
+        _ngcontent-ng-c1031656287=""
+        src="assets/images/melon.jpg"
+        alt="texto-aleternativo"
+        class="example-image"
+      /><span _ngcontent-ng-c1031656287="" class="delete-icon">X</span>
     </div>
   </main>
 </div>

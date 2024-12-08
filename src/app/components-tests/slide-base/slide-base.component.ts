@@ -1,16 +1,20 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Renderer2 } from '@angular/core';
 import { CdkDrag, DragDrop, DragRef } from '@angular/cdk/drag-drop';
 import { ElementModifierService } from '../../services/element-modifier-service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-slide-base',
   standalone: true,
-  imports: [CdkDrag],
+  imports: [CdkDrag, FormsModule, CommonModule],
   templateUrl: './slide-base.component.html',
   styleUrl: './slide-base.component.scss',
 })
 export class SlideBaseComponent {
   dragRefs: DragRef[] = [];
+  image: string = '';
+  text: string = '';
 
   constructor(
     private renderer: Renderer2,
@@ -19,7 +23,7 @@ export class SlideBaseComponent {
     private elementModifierService: ElementModifierService
   ) {}
 
-  addElement(type: string, content: string) {
+  addElement(type: string) {
     // Seleccionar el contenedor
     const container = this.el.nativeElement.querySelector('#example-boundary');
 
@@ -42,14 +46,20 @@ export class SlideBaseComponent {
       const imgElement = this.renderer.createElement('img');
 
       // Configurar atributos de la imagen
-      this.renderer.setAttribute(imgElement, 'src', content); // Ruta de la imagen
+      const normalizedPath = this.image.replace(/\\/g, '/'); // Reemplaza las contrabarras por barras normales
+      const image = normalizedPath.split('/').pop();
+      console.log('imageComplete', image);
+
+      if (image) {
+        this.renderer.setAttribute(imgElement, 'src', 'assets/images/' + image); // Ruta de la imagen
+      }
       this.renderer.setAttribute(imgElement, 'alt', 'texto-aleternativo'); // Texto alternativo
       this.renderer.addClass(imgElement, 'example-image'); // Clase para estilos
 
       this.renderer.appendChild(newElement, imgElement);
       this.delete(newElement);
     } else if (type === 'text') {
-      const text = this.renderer.createText(content);
+      const text = this.renderer.createText(this.text);
 
       this.renderer.appendChild(newElement, text);
       this.delete(newElement);
