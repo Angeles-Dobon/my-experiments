@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  ElementRef,
+  OnInit,
+  Renderer2,
+} from '@angular/core';
 import { CdkDrag, DragDrop, DragRef } from '@angular/cdk/drag-drop';
 import { ElementModifierService } from '../../services/element-modifier-service';
 import { FormsModule } from '@angular/forms';
@@ -11,7 +17,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './slide-base.component.html',
   styleUrl: './slide-base.component.scss',
 })
-export class SlideBaseComponent implements OnInit {
+export class SlideBaseComponent implements OnInit, AfterContentInit {
   dragRefs: DragRef[] = [];
   image: string = '';
   text: string = '';
@@ -25,7 +31,9 @@ export class SlideBaseComponent implements OnInit {
     private elementModifierService: ElementModifierService
   ) {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ngAfterContentInit() {
     this.initEditionSlideArea();
   }
 
@@ -137,6 +145,26 @@ export class SlideBaseComponent implements OnInit {
     // Seleccionar el contenedor
     const container = this.el.nativeElement.querySelector('#example-boundary');
 
+    // Seleccionar todos los divs .example-box dentro del contenedor
+    const divs = container.querySelectorAll('.example-box');
+
+    // Iterar sobre los divs y aplicar las configuraciones
+    divs.forEach((div: any) => {
+      // Agregar clase y atributos
+      this.renderer.setAttribute(div, 'cdkDragBoundary', '#example-boundary');
+      this.renderer.setAttribute(div, 'cdkDrag', '');
+      this.renderer.addClass(div, 'cdk-drag');
+
+      // Crear referencia de drag para cada elemento
+      const dragRef = this.dragDrop.createDrag(div);
+
+      // Limitar el movimiento al contenedor
+      dragRef.withBoundaryElement(container);
+
+      // Guardar la referencia de drag
+      this.dragRefs.push(dragRef);
+    });
+
     // Seleccionar los botones delete
     const spans1 = container.querySelectorAll('.delete-icon');
 
@@ -165,27 +193,6 @@ export class SlideBaseComponent implements OnInit {
           this.sizeElementHeight + 'px'
         ); //TODO: El usuarió decidirá las dimensiones
       });
-    });
-
-    // Seleccionar todos los divs dentro del contenedor
-    const divs = container.querySelectorAll('div');
-
-    // Iterar sobre los divs y aplicar las configuraciones
-    divs.forEach((div: HTMLElement) => {
-      // Agregar clase y atributos
-      this.renderer.setAttribute(div, 'cdkDragBoundary', '#example-boundary');
-      this.renderer.setAttribute(div, 'cdkDrag', '');
-      this.renderer.addClass(div, 'cdk-drag');
-      this.renderer.addClass(div, 'example-box');
-
-      // Crear referencia de drag para cada elemento
-      const dragRef = this.dragDrop.createDrag(div);
-
-      // Limitar el movimiento al contenedor
-      dragRef.withBoundaryElement(container);
-
-      // Guardar la referencia de drag
-      this.dragRefs.push(dragRef);
     });
   }
 
