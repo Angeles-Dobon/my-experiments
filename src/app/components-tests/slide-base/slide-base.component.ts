@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { CdkDrag, DragDrop, DragRef } from '@angular/cdk/drag-drop';
 import { ElementModifierService } from '../../services/element-modifier-service';
 import { FormsModule } from '@angular/forms';
@@ -11,10 +11,12 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './slide-base.component.html',
   styleUrl: './slide-base.component.scss',
 })
-export class SlideBaseComponent {
+export class SlideBaseComponent implements OnInit {
   dragRefs: DragRef[] = [];
   image: string = '';
   text: string = '';
+  sizeElementWidth: number = 200;
+  sizeElementHeight: number = 200;
 
   constructor(
     private renderer: Renderer2,
@@ -22,6 +24,10 @@ export class SlideBaseComponent {
     private dragDrop: DragDrop,
     private elementModifierService: ElementModifierService
   ) {}
+
+  ngOnInit() {
+    this.initEditionSlideArea();
+  }
 
   addElement(type: string) {
     // Seleccionar el contenedor
@@ -53,16 +59,18 @@ export class SlideBaseComponent {
       if (image) {
         this.renderer.setAttribute(imgElement, 'src', 'assets/images/' + image); // Ruta de la imagen
       }
-      this.renderer.setAttribute(imgElement, 'alt', 'texto-aleternativo'); // Texto alternativo
+      this.renderer.setAttribute(imgElement, 'alt', 'texto-alternativo'); // Texto alternativo
       this.renderer.addClass(imgElement, 'example-image'); // Clase para estilos
 
       this.renderer.appendChild(newElement, imgElement);
-      this.delete(newElement);
+      this.deleteButton(newElement);
+      this.resizeButton(newElement);
     } else if (type === 'text') {
       const text = this.renderer.createText(this.text);
 
       this.renderer.appendChild(newElement, text);
-      this.delete(newElement);
+      this.deleteButton(newElement);
+      this.resizeButton(newElement);
     }
 
     // Insertar el elemento en el contenedor
@@ -77,7 +85,7 @@ export class SlideBaseComponent {
     this.dragRefs.push(dragRef);
   }
 
-  delete(newElement: any) {
+  deleteButton(newElement: any) {
     // Crear x de eliminación de elemento
     const XELEMENT = this.renderer.createElement('span');
     const DELETE = this.renderer.createText('X');
@@ -94,19 +102,68 @@ export class SlideBaseComponent {
     });
   }
 
-  editSlideArea() {
+  resizeButton(newElement: any) {
+    // Crear resize para redimensionarv del elemento
+    const EDITELEMENT = this.renderer.createElement('span');
+    const EDIT = this.renderer.createText('resize');
+    this.renderer.appendChild(EDITELEMENT, EDIT);
+    this.renderer.appendChild(newElement, EDITELEMENT);
+
+    this.renderer.addClass(EDITELEMENT, 'edit-icon'); // Clase para estilos
+
+    // Agregar el evento click dinámico
+    this.renderer.listen(EDITELEMENT, 'click', (event) => {
+      //console.log('edit', event);
+
+      const parentElement = event.target.parentNode; // Obtener el elemento padre (newElement)
+      //console.log('parentElement', event.target);
+      this.resizeElement(
+        parentElement,
+        this.sizeElementWidth + 'px',
+        this.sizeElementHeight + 'px'
+      ); //TODO: El usuarió decidirá las dimensiones
+    });
+  }
+
+  resizeElement(div: any, width: string, height: string): void {
+    this.renderer.setAttribute(
+      div,
+      'style',
+      'width:' + width + ';' + ' height:' + height
+    ); // Style
+  }
+
+  initEditionSlideArea() {
     // Seleccionar el contenedor
     const container = this.el.nativeElement.querySelector('#example-boundary');
 
-    // Seleccionar todos los divs dentro del contenedor
-    const spans = container.querySelectorAll('span');
+    // Seleccionar los botones delete
+    const spans1 = container.querySelectorAll('.delete-icon');
 
     // Agregar el evento click dinámico
-    spans.forEach((span: HTMLElement) => {
+    spans1.forEach((span: HTMLElement) => {
       this.renderer.listen(span, 'click', (event) => {
         //console.log('event', event);
         const parentElement = event.target.parentNode; // Obtener el elemento padre (newElement)
         parentElement.remove(); // Eliminar el elemento concreto
+      });
+    });
+
+    // Seleccionar los botones edit
+    const spans2 = container.querySelectorAll('.edit-icon');
+    // Agregar el evento click dinámico
+    // Agregar el evento click dinámico
+    spans2.forEach((span: HTMLElement) => {
+      this.renderer.listen(span, 'click', (event) => {
+        //console.log('edit', event);
+
+        const parentElement = event.target.parentNode; // Obtener el elemento padre (newElement)
+        //console.log('parentElement', event.target);
+        this.resizeElement(
+          parentElement,
+          this.sizeElementWidth + 'px',
+          this.sizeElementHeight + 'px'
+        ); //TODO: El usuarió decidirá las dimensiones
       });
     });
 

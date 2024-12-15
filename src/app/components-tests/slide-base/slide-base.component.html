@@ -1,14 +1,15 @@
 <div class="container">
-  <input
-    type="text"
+  <textarea
     id="text"
     name="text"
     [(ngModel)]="text"
     placeholder="Escribe aquí..."
-  />
+    rows="6"
+    cols="60"
+  ></textarea>
   <br />
   <button (click)="addElement('text')">new draggable text</button>
-  <br />
+  <hr />
   <input
     type="file"
     id="image"
@@ -18,47 +19,60 @@
   />
   <br />
   <button (click)="addElement('image')">new draggable image</button>
-  <br />
+  <hr />
+  <label for="sizeElementWidth">Width element (px) </label>
+  <input
+    type="number"
+    id="sizeElementWidth"
+    name="sizeElementWidth"
+    [(ngModel)]="sizeElementWidth"
+    placeholder="Ancho inicial 200px"
+    max="900"
+    min="100"
+  />
+  <label for="sizeElementHeight"> Heigth element (px) </label>
+  <input
+    type="number"
+    id="sizeElementHeight"
+    name="sizeElementHeight"
+    [(ngModel)]="sizeElementHeight"
+    placeholder="Alto inicial 200px"
+    max="400"
+    min="100"
+  />
+  <hr />
   <button (click)="saveSlideArea()">save area</button>
   <br />
-  <button (click)="editSlideArea()">edit area</button>
-  <br />
-  <p>Texto: {{ text }}</p>
-  <p>Imagen: {{ image }}</p>
   <main id="example-boundary" cdkDropList>
     <!-- divs texto o imágenes -->
     <div
-      _ngcontent-ng-c1031656287=""
+      _ngcontent-ng-c3719122371=""
       class="cdk-drag example-box"
-      style="transform: translate3d(432px, -7px, 0px)"
-    >
-      fgjghjkghkghk<span _ngcontent-ng-c1031656287="" class="delete-icon"
-        >X</span
-      >
-    </div>
-    <div
-      _ngcontent-ng-c1031656287=""
-      class="cdk-drag example-box"
-      style="transform: translate3d(-177px, 28px, 0px)"
+      style="transform: translate3d(102px, 94px, 0px)"
     >
       <img
-        _ngcontent-ng-c1031656287=""
+        _ngcontent-ng-c3719122371=""
         src="assets/images/car-cartoon-icon.jpg"
-        alt="texto-aleternativo"
+        alt="texto-alternativo"
         class="example-image"
-      /><span _ngcontent-ng-c1031656287="" class="delete-icon">X</span>
+      /><span _ngcontent-ng-c3719122371="" class="delete-icon">X</span
+      ><span _ngcontent-ng-c3719122371="" class="edit-icon">resize</span>
     </div>
     <div
-      _ngcontent-ng-c1031656287=""
+      _ngcontent-ng-c3719122371=""
       class="cdk-drag example-box"
-      style="transform: translate3d(-269px, 140px, 0px)"
+      style="
+        width: 400px;
+        height: 200px;
+        transform: translate3d(192px, -40px, 0px);
+      "
     >
-      <img
-        _ngcontent-ng-c1031656287=""
-        src="assets/images/melon.jpg"
-        alt="texto-aleternativo"
-        class="example-image"
-      /><span _ngcontent-ng-c1031656287="" class="delete-icon">X</span>
+      Donec quis orci sit amet dui suscipit egestas sed eget metus. Donec
+      dignissim, quam pellentesque pellentesque hendrerit, mauris ex commodo
+      massa, a euismod purus nisi vel sem. Fusce at urna consectetur, dapibus ex
+      a, bibendum tortor. Cras a luctus ante, vitae egestas odio.
+      <span _ngcontent-ng-c3719122371="" class="delete-icon">X</span
+      ><span _ngcontent-ng-c3719122371="" class="edit-icon">resize</span>
     </div>
   </main>
 </div>
